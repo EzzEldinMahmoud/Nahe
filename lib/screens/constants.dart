@@ -54,7 +54,7 @@ class _bottomsheetState extends State<bottomsheet> {
 
   List? values2;
 
-  String Baseurl = 'http://nahe.dhulfiqar.com';
+  String Baseurl = 'http://192.168.42.209:80';
 
   int id = int.parse(StorageUtil.getString('id'));
 
@@ -76,7 +76,7 @@ class _bottomsheetState extends State<bottomsheet> {
 
             values = providerdetailsaddress!.split(",");
             values!.forEach(print);
-            values2 = values![2]!.split("G");
+            values2 = values![2]!.split(",");
             values!.forEach(print);
           }
         }, builder: (Context, State) {
@@ -174,11 +174,7 @@ class _bottomsheetState extends State<bottomsheet> {
                                                     color: Colors.black),
                                                 overflow: TextOverflow.ellipsis,
                                                 softWrap: true,
-                                              ),
-                                            ],
-                                          ),
-                                          Row(
-                                            children: [
+                                              ),Text(''),
                                               Text(
                                                 values![1],
                                                 style: TextStyle(
@@ -186,16 +182,24 @@ class _bottomsheetState extends State<bottomsheet> {
                                                     color: Colors.black),
                                                 overflow: TextOverflow.ellipsis,
                                                 softWrap: true,
-                                              ),
-                                              Text(','),
+                                              )
+                                            ],
+                                          ),
+                                          Row(
+                                            children: [
+                                             Text(''),
                                               Text(
                                                 values2![0],
                                                 style: TextStyle(
                                                     fontSize: 15,
                                                     color: Colors.black),
-                                              ),
+                                                overflow: TextOverflow.ellipsis,
+                                                softWrap: true,
+                                              )
+
                                             ],
-                                          )
+                                          ),
+
                                         ],
                                       ),
                                     ),

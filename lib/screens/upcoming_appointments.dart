@@ -23,7 +23,7 @@ class appointmentpage extends StatefulWidget {
 class _appointmentpageState extends State<appointmentpage> {
   late List appointmentmodelARC;
   late List appointmentmodelUP;
-  String Baseurl = 'http://nahe.dhulfiqar.com';
+  String Baseurl = 'http://192.168.42.209:80';
   String photo = '';
   @override
   void initState() {
@@ -92,7 +92,7 @@ class _appointmentpageState extends State<appointmentpage> {
                                     onTap: () {},
                                     child: CircleAvatar(
                                       backgroundImage:
-                                          NetworkImage(Baseurl + '/m/' + photo),
+                                          NetworkImage(Baseurl + photo),
                                     ),
                                   ));
                             },
@@ -368,7 +368,6 @@ class _appointmentpageState extends State<appointmentpage> {
                         onTap: () {
                           int appointmentid = appointmentmodelARC[index].id;
                           int id = appointmentmodelUP[index].agent.id;
-
                           StorageUtil.putString(
                               'appointmentid', appointmentid.toString());
                           StorageUtil.putString('id', id.toString());

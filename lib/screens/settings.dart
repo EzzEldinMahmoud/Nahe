@@ -23,7 +23,7 @@ class _settingsScreenState extends State<settingsScreen> {
   TextEditingController phonenumber = TextEditingController();
   TextEditingController password = TextEditingController();
   String photohere = '';
-  String Baseurl = 'http://nahe.dhulfiqar.com/';
+  String Baseurl = 'http://192.168.42.209:80';
 
   @override
   Widget build(BuildContext context) {
@@ -82,7 +82,7 @@ class _settingsScreenState extends State<settingsScreen> {
                                             onTap: () {},
                                             child: CircleAvatar(
                                               backgroundImage: NetworkImage(
-                                                  Baseurl + 'm/' + photohere),
+                                                  Baseurl + photohere),
                                             ),
                                           ));
                                     },

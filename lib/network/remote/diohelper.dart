@@ -17,7 +17,7 @@ class diohelper {
 
   static init() {
     dio = Dio(BaseOptions(
-        baseUrl: 'http://nahe.dhulfiqar.com/',
+        baseUrl: 'http://192.168.42.209:80/',
         contentType: 'application/json',
         responseType: ResponseType.plain,
         receiveDataWhenStatusError: true,

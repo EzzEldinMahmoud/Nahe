@@ -1,10 +1,10 @@
-class NEARBYSERVICEPROVIDERS {
-  NEARBYSERVICEPROVIDERS({
+class NEARBYSERVICEPROVIDERS  {
+  NEARBYSERVICEPROVIDERS ({
     required this.data,
   });
   late final Data data;
   
-  NEARBYSERVICEPROVIDERS.fromJson(Map<String, dynamic> json){
+  NEARBYSERVICEPROVIDERS .fromJson(Map<String, dynamic> json){
     data = Data.fromJson(json['data']);
   }
 

@@ -10,6 +10,7 @@ import 'package:project/models/appointments/APPOINTMENTSdetails.dart';
 import 'package:project/models/AUTH MODELS/LOGIN_model.dart';
 import 'package:project/models/appointments/Appointments.dart';
 import 'package:project/models/appointments/appointinvoicemodel.dart';
+import 'package:project/models/appointments/appointmentcommentmodel.dart';
 import 'package:project/models/errorsmodel/LoginERRORmodel.dart';
 import 'package:project/models/general models/homeModel.dart';
 import 'package:project/models/nearbyserviceprovider/nearbyservicesp.dart';
@@ -27,6 +28,7 @@ import 'package:project/screens/states/settingsstates.dart';
 
 import '../models/general models/SEARCHAGENTMODEL.dart';
 import '../models/appointments/appointschedule.dart';
+import '../models/nearbyserviceprovider/nearbysingleserviceproviderdetailsmodel.dart';
 
 class appcubit extends Cubit<appstate> {
   appcubit(appstate initialState) : super(initialState);
@@ -304,6 +306,61 @@ class appcubit extends Cubit<appstate> {
       emit(appERRORstate(error.toString()));
     });
   }
+  
+    Future getcommentreview({required int ID, required String Token}) async {
+    emit(apploadingcommentagentstate());
+    diohelper
+        .postData(
+            Url: GETSERVICEPROVIDERDETAILSHERE,
+            query: {},
+            Token: Token,
+            data: {'appointment_id': ID})
+        .then((value) {
+      diohelper.dio?.options.headers["Authorization"] = "token ${token}";
+
+      print(value?.statusCode.toString());
+      print(value?.data);
+      print(value?.statusCode);
+      print(value?.statusCode);
+    final   serviceproviderdetailshere = APPOINTMENTCOMMENTMODEL.fromJson(jsonDecode(value?.data));
+
+      if (serviceproviderdetailshere != null) {
+        print(serviceproviderdetailshere.data);
+        emit(appsuccesscommentagentstate(serviceproviderdetailshere));
+      }
+    }).catchError((error) {
+      print(jsonDecode(error.toString()));
+      emit(appERRORcommentagentstate(jsonDecode(error.toString())));
+    });
+
+  }
+  Future GETserviceproviderDETAILS({required int ID, required String Token}) async {
+    emit(appserviceprovidersingledetailsloadingstate());
+    diohelper
+        .postData(
+            Url: GETSERVICEPROVIDERDETAILSHERE,
+            query: {},
+            Token: Token,
+            data: {'service_id': ID})
+        .then((value) {
+      diohelper.dio?.options.headers["Authorization"] = "token ${token}";
+
+      print(value?.statusCode.toString());
+      print(value?.data);
+      print(value?.statusCode);
+      print(value?.statusCode);
+    final   serviceproviderdetailshere = Nearbyserviceprovidermodel.fromJson(jsonDecode(value?.data));
+
+      if (serviceproviderdetailshere != null) {
+        print(serviceproviderdetailshere.data);
+        emit(appserviceprovidersingledetailssuccessstate(serviceproviderdetailshere));
+      }
+    }).catchError((error) {
+      print(jsonDecode(error.toString()));
+      emit(appserviceprovidersingledetailsERRORstate(jsonDecode(error.toString())));
+    });
+
+  }
 
   Future<void> scheduleappointment(
       {required int agent_id,
@@ -343,18 +400,19 @@ class appcubit extends Cubit<appstate> {
       required String comment,
       required double rating,
       required Token}) async {
-    emit(appscheduleloadingstate());
+    emit(appwritereviewloadingstate());
     diohelper.postData(Url: WRITEREVIEW, data: {
       'appointment_id': appointment_id,
       'comment': comment,
       'rating': rating,
     }).then((value) {
+      emit(appwritereviewsuccessstate());
       diohelper.dio?.options.headers[{
         'Authorization': 'Bearer ${Token}',
       }];
     }).catchError((error) {
       print(error.toString());
-      emit(appscheduleERRORstate(error.toString()));
+      emit(appwritereviewERRORstate(error.toString()));
     });
   }
 

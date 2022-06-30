@@ -20,7 +20,9 @@ const SEARCHPAGERESULT = 'api/f/search';
 const GETAPPOINTMENTDETAILS = 'api/f/appointment_details';
 const WRITEREVIEW = 'api/f/write_review';
 const GETAPPOINTINVOICE = 'api/f/get_app_invoice';
-const baseurl = ' nahe.dhulfiqar.com';
+const GETSERVICEPROVIDERDETAILSHERE = 'api/f/nearby_service_providers';
+const getcommentserviceagent='api/f/get_app_review';
+const baseurl = ' http://0.0.0.0:8000';
 Future<String> getFilePath(uniqueFileName) async {
   String path = '';
 

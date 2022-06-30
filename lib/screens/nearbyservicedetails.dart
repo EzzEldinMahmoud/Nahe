@@ -8,28 +8,30 @@ import 'package:project/screens/settings.dart';
 import 'package:project/screens/states/loginstates.dart';
 
 import '../models/AUTH MODELS/user_info.dart';
+import '../models/nearbyserviceprovider/nearbysingleserviceproviderdetailsmodel.dart';
 import '../network/remote/local/cachehelper.dart';
 import 'cubit.dart';
 
-class searchpage extends StatefulWidget {
-  searchpage({Key? key}) : super(key: key);
+class nearbyservicesingledetailsprovider extends StatefulWidget {
+  nearbyservicesingledetailsprovider({Key? key}) : super(key: key);
 
   @override
-  State<searchpage> createState() => _searchpageState();
+  State<nearbyservicesingledetailsprovider> createState() => _nearbyservicesingledetailsproviderState();
 }
 
-class _searchpageState extends State<searchpage> {
+class _nearbyservicesingledetailsproviderState extends State<nearbyservicesingledetailsprovider> {
   TextEditingController jobtitle = TextEditingController();
   String Baseurl = 'http://192.168.42.209:80';
   HOMEMODEL? hererimage;
+  Nearbyserviceprovidermodel? nearbysingledetailsserviceprovidermodel;
   var lengthdate;
   bool showWidget = false;
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => appcubit(appsearchinitialstate())
+      create: (context) => appcubit(appserviceprovidersingledetailsinitialstate())
         ..getuserdata(Token: StorageUtil.getString('token'))
-        ..gethome(Token: StorageUtil.getString('token'))
+        ..gethome(Token: StorageUtil.getString('token'))..GETserviceproviderDETAILS(ID:int.parse(StorageUtil.getString('serviceid')), Token: StorageUtil.getString('token'), )
         ..getsearchresult(
             jobtitle: jobtitle.text, Token: StorageUtil.getString('token')),
       child: BlocConsumer<appcubit, appstate>(
@@ -40,11 +42,14 @@ class _searchpageState extends State<searchpage> {
           if (state is appsearchsuccessstate) {
             lengthdate = state.userdata.data.providers;
           }
+          if(state is appserviceprovidersingledetailssuccessstate){
+nearbysingledetailsserviceprovidermodel = state.userdata;
+          }
         },
         builder: (context, state) {
           return Material(
             child: ConditionalBuilder(
-              condition: state is! appsuccessstate,
+              condition:state is! appserviceprovidersingledetailsloadingstate,
               builder: (context) {
                 return SafeArea(
                   child: SingleChildScrollView(
@@ -58,8 +63,13 @@ class _searchpageState extends State<searchpage> {
                             padding: const EdgeInsets.all(10.0),
                             child: Row(
                               children: [
-                                Text(
-                                  'Search',
+                               nearbysingledetailsserviceprovidermodel!.data.nearbyProviders.length == 0 ? Text(
+                                  'Nearby Service',
+                                  style: TextStyle(
+                                      fontSize: 30,
+                                      fontWeight: FontWeight.bold),
+                                ):Text(
+                                  'Nearby ${nearbysingledetailsserviceprovidermodel!.data.nearbyProviders[0].occupation.title}s',
                                   style: TextStyle(
                                       fontSize: 30,
                                       fontWeight: FontWeight.bold),
@@ -137,39 +147,35 @@ class _searchpageState extends State<searchpage> {
                                       child: ListView.builder(
                                         itemCount: lengthdate!.length,
                                         itemBuilder: (context, index) {
-                                          return GestureDetector(
-                                            onTap: () {
-                                              int id = lengthdate![index].id;
-                                              StorageUtil.putString(
-                                                  'id',
-                                                  lengthdate![index]
-                                                      .id
-                                                      .toString());
-
-                                              appcubit
-                                                  .get(context)
-                                                  .GETAGENTDATADETAILS(
-                                                      ID: id,
-                                                      Token:
-                                                          StorageUtil.getString(
-                                                              'token'));
-                                              showBarModalBottomSheet(
-                                                  expand: false,
-                                                  context: context,
-                                                  backgroundColor:
-                                                      Colors.transparent,
-                                                  builder: (context) =>
-                                                      bottomsheet());
-                                            },
-                                            child: SizedBox(
-                                                height: MediaQuery.of(context)
-                                                        .size
-                                                        .height *
-                                                    0.16,
-                                                width: MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    1,
+                                          return SizedBox(
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .height *
+                                                  0.16,
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  1,
+                                              child: GestureDetector(
+                                                  onTap: () {
+                                                    int id = lengthdate![index]..id;
+                                                    StorageUtil.putString(
+                                                        'id', id.toString());
+                                                    appcubit
+                                                        .get(context)
+                                                        .GETAGENTDATADETAILS(
+                                                        ID: id,
+                                                        Token:
+                                                        StorageUtil.getString(
+                                                            'token'));
+                                                    showBarModalBottomSheet(
+                                                        expand: false,
+                                                        context: context,
+                                                        backgroundColor:
+                                                        Colors.transparent,
+                                                        builder: (context) =>
+                                                            bottomsheet());
+                                                  },
                                                 child: Padding(
                                                   padding: EdgeInsets.symmetric(
                                                       horizontal: 5,
@@ -353,6 +359,243 @@ class _searchpageState extends State<searchpage> {
                                                           ],
                                                         ),
                                                       )),
+                                                ),
+                                              ));
+                                        },
+                                      ),
+                                    );
+                                  },
+                                  fallback: (context) => Center(
+                                        child: CircularProgressIndicator(
+                                            color: Colors.green),
+                                      ))
+                              : nearbysingledetailsserviceprovidermodel!.data.nearbyProviders != 0? ConditionalBuilder(
+                                  condition:state is! appserviceprovidersingledetailsloadingstate ,
+                                  builder: (context) {
+                                    return Container(
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.78,
+                                      width:
+                                          MediaQuery.of(context).size.width * 1,
+                                      child: ListView.builder(
+                                        itemCount: nearbysingledetailsserviceprovidermodel!.data.nearbyProviders.length,
+                                        itemBuilder: (context, index) {
+                                          return GestureDetector(
+                                            onTap: () {
+                                              int id = nearbysingledetailsserviceprovidermodel!.data.nearbyProviders[index].id;
+                                              StorageUtil.putString(
+                                                  'id',
+                                                 id
+                                                      .toString());
+
+                                              appcubit
+                                                  .get(context)
+                                                  .GETAGENTDATADETAILS(
+                                                      ID: id,
+                                                      Token:
+                                                          StorageUtil.getString(
+                                                              'token'));
+                                              showBarModalBottomSheet(
+                                                  expand: false,
+                                                  context: context,
+                                                  backgroundColor:
+                                                      Colors.transparent,
+                                                  builder: (context) =>
+                                                      bottomsheet());
+                                            },
+                                            child: SizedBox(
+                                                height: MediaQuery.of(context)
+                                                        .size
+                                                        .height *
+                                                    0.16,
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    1,
+                                                child: Padding(
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal: 5,
+                                                      vertical: 0),
+                                                  child: Card(
+                                                      shape:
+                                                          RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10.0),
+                                                      ),
+                                                      margin: EdgeInsets.all(4),
+                                                      child: Container(
+                                                        decoration: BoxDecoration(
+                                                            color: Color(
+                                                                0xffffEEF6F6),
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        15)),
+                                                        padding:
+                                                            EdgeInsets.all(15),
+                                                        child: Row(
+                                                          children: [
+                                                            Container(
+                                                              height: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .height *
+                                                                  0.15,
+                                                              width: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width *
+                                                                  0.22,
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              8),
+                                                                      image:
+                                                                          DecorationImage(
+                                                                        image: NetworkImage(Baseurl +
+                                                                            nearbysingledetailsserviceprovidermodel!.data.nearbyProviders[index].photo),
+                                                                        fit: BoxFit
+                                                                            .cover,
+                                                                      )),
+                                                            ),
+                                                            SizedBox(
+                                                              width: 15,
+                                                              height: 10,
+                                                            ),
+                                                            Container(
+                                                                child: Column(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .start,
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Text(
+                                                                  nearbysingledetailsserviceprovidermodel!.data.nearbyProviders[
+                                                                          index]
+                                                                      .name,
+                                                                  style: TextStyle(
+                                                                      fontSize:
+                                                                          20,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold),
+                                                                ),
+                                                                Text(
+                                                                  nearbysingledetailsserviceprovidermodel!.data.nearbyProviders[
+                                                                          index]
+                                                                      .occupation
+                                                                      .title,
+                                                                  style: TextStyle(
+                                                                      fontSize:
+                                                                          15,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold),
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .left,
+                                                                ),
+                                                                Expanded(
+                                                                  child:
+                                                                      Text(""),
+                                                                ),
+                                                                Row(
+                                                                  children: [
+                                                                    Container(
+                                                                      height: MediaQuery.of(context)
+                                                                              .size
+                                                                              .height *
+                                                                          0.03,
+                                                                      width: MediaQuery.of(context)
+                                                                              .size
+                                                                              .width *
+                                                                          0.25,
+                                                                      decoration: BoxDecoration(
+                                                                          color: Colors
+                                                                              .transparent,
+                                                                          borderRadius:
+                                                                              BorderRadius.circular(15)),
+                                                                      child:
+                                                                          Row(
+                                                                        children: [
+                                                                          SizedBox(
+                                                                            width:
+                                                                                10,
+                                                                          ),
+                                                                          Text(
+                                                                            nearbysingledetailsserviceprovidermodel!.data.nearbyProviders[index].rating,
+                                                                            style:
+                                                                                TextStyle(color: Colors.black),
+                                                                          ),
+                                                                          Icon(
+                                                                            Icons.star,
+                                                                            color:
+                                                                                Colors.yellow,
+                                                                            size:
+                                                                                17,
+                                                                          ),
+                                                                          SizedBox(
+                                                                            width:
+                                                                                5,
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                    ),
+                                                                    SizedBox(
+                                                                      width: MediaQuery.of(context)
+                                                                              .size
+                                                                              .width *
+                                                                          0.03,
+                                                                    ),
+                                                                    GestureDetector(
+                                                                      onTap:
+                                                                          () {},
+                                                                      child:
+                                                                          Container(
+                                                                        height: MediaQuery.of(context).size.height *
+                                                                            0.03,
+                                                                        width: MediaQuery.of(context).size.width *
+                                                                            0.2,
+                                                                        decoration: BoxDecoration(
+                                                                            color:
+                                                                                Colors.transparent,
+                                                                            borderRadius: BorderRadius.circular(15)),
+                                                                        child:
+                                                                            GestureDetector(
+                                                                          onTap:
+                                                                              () {},
+                                                                          child:
+                                                                              Row(
+                                                                            children: [
+                                                                              Expanded(
+                                                                                child: Text(''),
+                                                                              ),
+                                                                              Text(
+                                                                                " Details",
+                                                                                style: TextStyle(color: Colors.black),
+                                                                              ),
+                                                                              Icon(
+                                                                                Icons.arrow_forward_sharp,
+                                                                                color: Colors.black,
+                                                                                size: 17,
+                                                                              ),
+                                                                            ],
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    )
+                                                                  ],
+                                                                )
+                                                              ],
+                                                            ))
+                                                          ],
+                                                        ),
+                                                      )),
                                                 )),
                                           );
                                         },
@@ -362,12 +605,8 @@ class _searchpageState extends State<searchpage> {
                                   fallback: (context) => Center(
                                         child: CircularProgressIndicator(
                                             color: Colors.green),
-                                      ))
-                              : Container(
-                                  child: Center(
-                                      child: Text(
-                                          "there aren't any agents near you ")),
-                                ),
+                                      )):Container(child: Center(child: Text('there are currently no agents nearby')),)
+                              
                         ],
                       ),
                     ),

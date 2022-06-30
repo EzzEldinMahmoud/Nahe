@@ -15,6 +15,7 @@ import 'package:project/screens/states/loginstates.dart';
 import 'package:project/screens/upcoming_appointments.dart';
 
 import '../Widgets/schedulewidget.dart';
+import 'nearbyservicedetails.dart';
 
 class homeScreen extends StatefulWidget {
   homeScreen({Key? key}) : super(key: key);
@@ -29,7 +30,7 @@ class _homeScreenState extends State<homeScreen> {
     super.initState();
   }
 
-  String Baseurl = 'http://nahe.dhulfiqar.com/';
+  String Baseurl = 'http://192.168.42.209:80';
   HOMEMODEL? here;
   String? image;
   List? herelengthlsit;
@@ -128,7 +129,6 @@ class _homeScreenState extends State<homeScreen> {
                                           child: CircleAvatar(
                                             backgroundImage: NetworkImage(
                                                 Baseurl +
-                                                    'm/' +
                                                     here!.data.user.photo),
                                           ),
                                         ));
@@ -230,7 +230,11 @@ class _homeScreenState extends State<homeScreen> {
                                     int idofservice =
                                         here!.data.services[index].id;
                                     StorageUtil.putString(
-                                        'idofservice', idofservice.toString());
+                                        'serviceid', idofservice.toString());
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) {
+                                          return nearbyservicesingledetailsprovider();
+                                          
+                                        }));
                                   },
                                   child: Container(
                                     decoration: BoxDecoration(

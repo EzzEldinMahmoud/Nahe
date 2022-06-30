@@ -25,7 +25,7 @@ class NearbyServicePage extends StatefulWidget {
 
 class _NearbyServicePageState extends State<NearbyServicePage> {
   List? here;
-  String Baseurl = 'http://nahe.dhulfiqar.com';
+  String Baseurl = 'http://192.168.42.209:80';
   String photo = '';
   @override
   void initState() {
@@ -95,7 +95,7 @@ class _NearbyServicePageState extends State<NearbyServicePage> {
                               },
                               child: CircleAvatar(
                                 backgroundImage:
-                                    NetworkImage(Baseurl + '/m/' + photo),
+                                    NetworkImage(Baseurl + photo),
                               ),
                             )),
                       )

@@ -59,7 +59,7 @@ class _scheduleAppointmentState extends State<scheduleAppointment> {
 
   List? values2;
 
-  String Baseurl = 'http://nahe.dhulfiqar.com';
+  String Baseurl = 'http://192.168.42.209:80';
 
   int id = int.parse(StorageUtil.getString('id'));
   var Date = TextEditingController();
@@ -85,7 +85,7 @@ class _scheduleAppointmentState extends State<scheduleAppointment> {
             providerdetailsID = State.userdata.data.provider.id;
             values = providerdetailsaddress!.split(",");
             values!.forEach(print);
-            values2 = values![2]!.split("G");
+            values2 = values![2]!.split(",");
             values!.forEach(print);
           }
         }, builder: (Context, State) {
@@ -209,21 +209,21 @@ class _scheduleAppointmentState extends State<scheduleAppointment> {
                                                   overflow:
                                                       TextOverflow.ellipsis,
                                                   softWrap: true,
-                                                ),
-                                              ],
-                                            ),
-                                            Row(
-                                              children: [
+                                                ),Text(''),
                                                 Text(
                                                   values![1],
                                                   style: TextStyle(
                                                       fontSize: 15,
                                                       color: Colors.black),
                                                   overflow:
-                                                      TextOverflow.ellipsis,
+                                                  TextOverflow.ellipsis,
                                                   softWrap: true,
                                                 ),
-                                                Text(','),
+
+                                              ],
+                                            ),
+                                            Row(
+                                              children: [
                                                 Text(
                                                   values2![0],
                                                   style: TextStyle(
@@ -594,7 +594,7 @@ class _upcomingappointmentsState extends State<upcomingappointments> {
   int? providerdetailsID;
 
   List? values;
-
+  List? values5;
   List? values2;
   APPOINTMENTSDETAILS? appointmentmodelhere;
   int? appointmentmodelhereSTATUS;
@@ -609,7 +609,7 @@ class _upcomingappointmentsState extends State<upcomingappointments> {
     return directory.path;
   }
 
-  String Baseurl = 'https://nahe.dhulfiqar.com';
+  String Baseurl = 'http://192.168.42.209:80';
 
   int id = int.parse(StorageUtil.getString('id'));
   int appointmentid = int.parse(StorageUtil.getString('appointmentid'));
@@ -651,8 +651,11 @@ class _upcomingappointmentsState extends State<upcomingappointments> {
             providerdetailsID = State.userdata.data.appointment.agent.id;
             values = providerdetailsaddress!.split(",");
             values!.forEach(print);
-            values2 = values![2]!.split("G");
+            values2 = values![1]!.split(",");
             values!.forEach(print);
+            values5 = providerdetailsname!.split(
+                " "); // split() will split from . and gives new List with separated elements.
+            values?.forEach(print);
           }
         }, builder: (Context, State) {
           return SingleChildScrollView(
@@ -849,20 +852,16 @@ class _upcomingappointmentsState extends State<upcomingappointments> {
                                           SizedBox(
                                             height: 10,
                                           ),
-                                          SingleChildScrollView(
-                                            child: Expanded(
-                                              child: ReadMoreText(
-                                                appointmentmodelhereDETAILS!,
-                                                style: TextStyle(
-                                                    fontSize: 15,
-                                                    color: Colors.black),
-                                                trimLines: 5,
-                                              ),
+                                          Expanded(
+                                            child: ReadMoreText(
+                                              appointmentmodelhereDETAILS!,
+                                              style: TextStyle(
+                                                  fontSize: 15,
+                                                  color: Colors.black),
+                                              trimLines: 5,
                                             ),
                                           ),
-                                          Expanded(
-                                            child: Text(''),
-                                          ),
+                                        
                                           appointmentmodelhereSTATUS == 4
                                               ? ConditionalBuilder(
                                                   condition: State
@@ -1011,6 +1010,7 @@ class _upcomingappointmentsState extends State<upcomingappointments> {
                                           SizedBox(
                                             height: 5,
                                           ),
+                                         appointmentmodelhereSTATUS == 4 ?
                                           Container(
                                               alignment: Alignment.bottomCenter,
                                               child: FlatButton(
@@ -1043,7 +1043,7 @@ class _upcomingappointmentsState extends State<upcomingappointments> {
                                                       color: Colors.white,
                                                       fontSize: 19),
                                                 ),
-                                              )),
+                                              )): Container(),
                                         ]),
                                   );
                                 },
@@ -1096,7 +1096,7 @@ class _writeReviewState extends State<writeReview> {
 
   double rating = 0.0;
 
-  String Baseurl = 'http://nahe.dhulfiqar.com';
+  String Baseurl = 'http://192.168.42.209:80';
 
   int id = int.parse(StorageUtil.getString('id'));
   int appointmentid = int.parse(StorageUtil.getString('appointmentid'));

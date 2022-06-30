@@ -7,10 +7,12 @@ import '../../models/AUTH MODELS/LOGIN_model.dart';
 import '../../models/AUTH MODELS/registermodel.dart';
 import '../../models/AUTH MODELS/user_info.dart';
 import '../../models/appointments/Appointments.dart';
+import '../../models/appointments/appointmentcommentmodel.dart';
 import '../../models/appointments/appointschedule.dart';
 import '../../models/general models/SEARCHAGENTMODEL.dart';
 import '../../models/general models/homeModel.dart';
 import '../../models/nearbyserviceprovider/nearbyservicesp.dart';
+import '../../models/nearbyserviceprovider/nearbysingleserviceproviderdetailsmodel.dart';
 import '../../models/nearbyserviceprovider/serviceModel.dart';
 
 abstract class appstate {}
@@ -30,6 +32,38 @@ class appsuccessstate extends appstate {
 class appERRORstate extends appstate {
   final String error;
   appERRORstate(this.error);
+}
+class appinitialcommentagentstate extends appstate {}
+
+class apploadingcommentagentstate extends appstate {}
+
+class appsuccesscommentagentstate extends appstate {
+  final APPOINTMENTCOMMENTMODEL? userdata;
+
+  appsuccesscommentagentstate(
+    this.userdata,
+  );
+}
+
+class appERRORcommentagentstate extends appstate {
+  final String error;
+  appERRORcommentagentstate(this.error);
+}
+class appserviceprovidersingledetailsinitialstate extends appstate {}
+
+class appserviceprovidersingledetailsloadingstate extends appstate {}
+
+class appserviceprovidersingledetailssuccessstate extends appstate {
+  final Nearbyserviceprovidermodel userdata;
+
+  appserviceprovidersingledetailssuccessstate(
+    this.userdata,
+  );
+}
+
+class appserviceprovidersingledetailsERRORstate extends appstate {
+  final String error;
+  appserviceprovidersingledetailsERRORstate(this.error);
 }
 
 class appappointinvoiceinitialstate extends appstate {}
@@ -100,6 +134,20 @@ class appscheduleERRORstate extends appstate {
   appscheduleERRORstate(this.error);
 }
 
+class appwritereviewinitialstate extends appstate {}
+
+class appwritereviewloadingstate extends appstate {}
+
+class appwritereviewsuccessstate extends appstate {
+
+  appwritereviewsuccessstate(
+  );
+}
+
+class appwritereviewERRORstate extends appstate {
+  final String error;
+  appwritereviewERRORstate(this.error);
+}
 class appservicedetailsinitialstate extends appstate {}
 
 class appservicedetailloadingstate extends appstate {}

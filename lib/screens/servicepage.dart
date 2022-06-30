@@ -15,6 +15,7 @@ import 'package:project/screens/upcoming_appointments.dart';
 
 import '../network/remote/local/cachehelper.dart';
 import 'constants.dart';
+import 'nearbyservicedetails.dart';
 
 class serviceScreen extends StatefulWidget {
   serviceScreen({Key? key}) : super(key: key);
@@ -25,7 +26,7 @@ class serviceScreen extends StatefulWidget {
 
 class _serviceScreenState extends State<serviceScreen> {
   Servicemodel? here;
-  String Baseurl = 'http://nahe.dhulfiqar.com';
+  String Baseurl = 'http://192.168.42.209:80';
   bool _show = false;
   final _gKey = new GlobalKey<ScaffoldState>();
   String photo = '';
@@ -112,7 +113,7 @@ class _serviceScreenState extends State<serviceScreen> {
                                         },
                                         child: CircleAvatar(
                                           backgroundImage: NetworkImage(
-                                              Baseurl + '/m/' + photo),
+                                              Baseurl + photo),
                                         ),
                                       ));
                                 },
@@ -205,13 +206,14 @@ class _serviceScreenState extends State<serviceScreen> {
                           child: Column(children: [
                             // Display the data loaded from sample.json
 
-                            Container(
+                           here!
+                                                .data.nearbyAgents.length != 0 ?  Container(
                               height: MediaQuery.of(context).size.height * 0.3,
                               width: MediaQuery.of(context).size.width * 1,
                               child: ListView.builder(
                                 itemCount: 2,
                                 itemBuilder: (context, index) {
-                                  return SizedBox(
+                                  return  SizedBox(
                                       height:
                                           MediaQuery.of(context).size.height *
                                               0.15,
@@ -432,7 +434,10 @@ class _serviceScreenState extends State<serviceScreen> {
                                       ));
                                 },
                               ),
-                            )
+                            ):Container(
+                              height:MediaQuery.of(context).size.height * 0.1,
+                                        child: Center(child: Text('there is no agent near your location')),
+                                      )
                           ]),
                         ),
                       );
@@ -452,7 +457,16 @@ class _serviceScreenState extends State<serviceScreen> {
                               children: List.generate(
                                   here!.data.catalogue.length, (index) {
                                 return GestureDetector(
-                                  onTap: () {},
+                                  onTap: () {
+                                    int idofservice =
+                                        here!.data.catalogue[index].id;
+                                    StorageUtil.putString(
+                                        'serviceid', idofservice.toString());
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) {
+                                          return nearbyservicesingledetailsprovider();
+                                          
+                                        }));
+                                  },
                                   child: Container(
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(15),
