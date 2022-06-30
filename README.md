@@ -5,6 +5,14 @@ A new Flutter project.
 ## Getting Started
 
 This project is a starting point for a Flutter application.
+to start the app you need flutter sdk
+first 
+open cmd in project folder 
+run "flutter pub get"
+after finishing connect your device to the laptop
+run "flutter devices"
+if flutter recognizes the device 
+run "flutter run" and choose android device cause this app was made for android only devices 
 
 A few resources to get you started if this is your first Flutter project:
 
